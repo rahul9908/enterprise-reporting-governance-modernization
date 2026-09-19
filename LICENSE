@@ -1,5 +1,1 @@
-Get-Content: 
-Line |
-   2 |  Get-Content -Raw -LiteralPath 'LICENSE'
-     |  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-     | Cannot find path 'LICENSE' because it does not exist.
+Portfolio project artifacts. All data and business context are controlled project materials. No confidential production information is included.
