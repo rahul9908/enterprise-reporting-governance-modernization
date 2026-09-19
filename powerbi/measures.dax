@@ -1,0 +1,18 @@
+Gross Revenue := SUM ( FactOrderLine[GrossRevenue] )
+Net Revenue := [Gross Revenue] - SUM ( FactOrderLine[DiscountAmount] ) - SUM ( FactOrderLine[ApprovedCreditAmount] )
+Gross Margin := [Net Revenue] - SUM ( FactOrderLine[COGSAmount] )
+Gross Margin % := DIVIDE ( [Gross Margin], [Net Revenue] )
+Order Count := DISTINCTCOUNT ( FactOrderLine[OrderID] )
+On-Time Delivered Lines := CALCULATE ( COUNTROWS ( FactOrderLine ), FactOrderLine[DeliveredFlag] = TRUE (), FactOrderLine[OnTimeFlag] = TRUE () )
+Delivered Lines := CALCULATE ( COUNTROWS ( FactOrderLine ), FactOrderLine[DeliveredFlag] = TRUE () )
+On-Time Delivery % := DIVIDE ( [On-Time Delivered Lines], [Delivered Lines] )
+Fill Rate % := DIVIDE ( SUM ( FactOrderLine[CappedShippedQty] ), SUM ( FactOrderLine[OrderedQty] ) )
+Return Rate % := DIVIDE ( SUM ( FactOrderLine[ApprovedReturnedQty] ), SUM ( FactOrderLine[ShippedQty] ) )
+Revenue Budget := SUM ( FactBudget[RevenueBudget] )
+Budget Variance := [Net Revenue] - [Revenue Budget]
+Budget Variance % := DIVIDE ( [Budget Variance], [Revenue Budget] )
+DQ Failed Records := CALCULATE ( COUNTROWS ( FactDataQualityResult ), FactDataQualityResult[RuleResult] = "FAIL" )
+Reconciliation Variance $ := SUM ( FactReconciliation[DashboardTotal] ) - SUM ( FactReconciliation[SourceControlTotal] )
+Reconciliation Variance % := DIVIDE ( [Reconciliation Variance $], SUM ( FactReconciliation[SourceControlTotal] ) )
+Certification Status := IF ( [DQ Failed Records] = 0 && ABS ( [Reconciliation Variance %] ) <= 0.005 && ABS ( [Reconciliation Variance $] ) <= 1000, "CERTIFIED", "NOT CERTIFIED" )
+
